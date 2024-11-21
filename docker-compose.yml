@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend/app:/app/app
+    env_file:
+      - .env
+    depends_on:
+      - ollama
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - '8080:80'
+
+  ollama:
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama:/root/.ollama
+    entrypoint: /bin/sh
+    command: >
+      -c "
+      ollama serve &
+      until curl -s http://localhost:11434 > /dev/null; do
+        echo 'Waiting for Ollama to start...';
+        sleep 2;
+      done;
+      ollama pull ${LLM_MODEL};
+      wait"
+    env_file:
+      - .env
+
+volumes:
+  ollama:

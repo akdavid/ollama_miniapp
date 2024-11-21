@@ -1,0 +1,7 @@
+.env
+.venv/
+.vscode/
+.flake8
+.prettierignore
+.prettierrc
+**__pycache__/
