@@ -32,23 +32,28 @@ export default {
   },
   methods: {
     async sendMessage() {
-      // Ajouter le message utilisateur au journal
+      // Add user message to chat log
       this.chatLog.push({ role: 'user', content: this.userMessage });
 
-      // Préparer une nouvelle entrée vide pour la réponse en streaming
+      // Add an empty assistant entry to append chunks
       const assistantEntry = { role: 'assistant', content: '' };
       this.chatLog.push(assistantEntry);
 
-      this.loading = true;
+      this.loadimodelng = true;
 
       try {
+        // Send the message using the streaming chat route
         const response = await fetch('http://localhost:8000/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: this.userMessage }),
         });
 
-        // Lire la réponse en mode streaming
+        if (!response.ok) {
+          throw new Error(`HTTP error: ${response.status}`);
+        }
+
+        // Process the response stream
         const reader = response.body.getReader();
         const decoder = new TextDecoder('utf-8');
         let done = false;
@@ -58,20 +63,24 @@ export default {
           done = readerDone;
 
           if (value) {
+            // Decode the chunk
             const chunk = decoder.decode(value);
-            // Ajouter le contenu reçu à la réponse en cours
+
+            // Log the received chunk in the browser console
+            console.log('Chunk received:', chunk);
+
+            // Append the chunk to the assistant's response
             assistantEntry.content += chunk;
+            this.$forceUpdate(); // Manually trigger UI re-render if necessary
           }
         }
       } catch (error) {
-        console.error("Erreur lors de l'envoi du message :", error);
-        assistantEntry.content = 'Erreur de communication avec le serveur.';
+        console.error('Error while sending the message:', error);
+        assistantEntry.content = 'Error communicating with the server.';
       } finally {
         this.loading = false;
+        this.userMessage = ''; // Clear the input field
       }
-
-      // Réinitialiser le champ de saisie
-      this.userMessage = '';
     },
   },
 };
