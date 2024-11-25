@@ -1,19 +1,20 @@
 # Ollama MiniApp
 
-**Ollama MiniApp** est une application web permettant de dialoguer avec un modèle de langage, tel que Llama, via une interface utilisateur intuitive. Ce projet repose sur un backend FastAPI, un frontend Vue.js, et utilise Ollama pour exécuter les modèles de langage.
+**Ollama MiniApp** est une application web permettant de dialoguer avec plusieurs modèles de langage, tels que Llama, Gemma, ou Mistral, via une interface utilisateur intuitive. Ce projet repose sur un backend FastAPI, un frontend Vue.js, et utilise Ollama pour exécuter les modèles de langage.
 
-![Capture d'écran](ollama_miniapp.png) <!-- Ajoutez une capture d'écran ici -->
+![Capture d'écran](images/main_interface.png) <!-- Capture de l'interface principale -->
 
 ## Fonctionnalités
 
-- **Interface utilisateur intuitive** : Une interface web pour envoyer des messages au modèle et afficher les réponses.
-- **Backend extensible** : Basé sur FastAPI.
+- **Interface utilisateur intuitive** : Une interface moderne pour envoyer des messages et afficher les réponses du modèle.
+- **Sélection de modèle** : Choisissez parmi une liste de modèles prédéfinis directement dans l'interface.
+- **Backend extensible** : Basé sur FastAPI, pour une gestion facile des requêtes.
 - **Déploiement Dockerisé** : Installation rapide avec Docker Compose.
-- **Personnalisation des modèles** : Configurez `LLM_MODEL` pour choisir le modèle à utiliser.
+- **Personnalisation des modèles** : Configurez et gérez facilement les modèles via les variables d'environnement.
 
 ## Architecture
 
-- **Frontend** : Développé avec Vue.js, il offre une interface interactive et réactive.
+- **Frontend** : Développé avec Vue.js, offrant une interface interactive et réactive.
 - **Backend** : API REST construite avec FastAPI pour gérer la communication entre le frontend et Ollama.
 - **Modèles de langage** : Exécutés via l'API Ollama.
 
@@ -52,9 +53,9 @@
 
 ## Utilisation
 
-1. Ouvrez votre navigateur et rendez-vous à l'URL [http://localhost:8080](http://localhost:8080).
-2. Tapez un message dans la barre de saisie et cliquez sur "Envoyer".
-3. Observez la réponse générée par le modèle.
+1. **Sélectionnez un modèle** : Utilisez la liste déroulante en haut de la page pour choisir le modèle de langage avec lequel vous souhaitez interagir.
+2. **Envoyez un message** : Tapez un message dans la barre de saisie et cliquez sur "Envoyer".
+3. **Recevez une réponse** : Les messages de l'utilisateur s'affichent à droite, et les réponses du modèle apparaissent à gauche.
 
 ---
 
@@ -62,7 +63,8 @@
 
 Les variables suivantes peuvent être configurées dans le fichier `.env` :
 
-- **`LLM_MODEL`** : Définit le modèle de langage utilisé (exemple : `gemma:2b`).
+- **`LLM_MODELS`** : Une liste des modèles de langage disponibles, séparés par des virgules (exemple : `gemma:2b,llama3.2:3b,mistral:7b`).
+  - Ces modèles doivent être compatibles avec Ollama. Une liste des modèles supportés est disponible sur [la bibliothèque Ollama](https://ollama.com/library).
 - **`OLLAMA_API_URL`** : URL de l'API Ollama pour la génération de texte (par défaut : `http://ollama:11434/api/generate`).
 
 ---
