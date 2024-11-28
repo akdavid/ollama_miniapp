@@ -17,6 +17,18 @@ services:
       context: ./frontend
     ports:
       - '8080:80'
+    env_file:
+      - .env
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+        - action: sync
+          path: ./frontend/public
+          target: /app/public
+        - action: rebuild
+          path: ./frontend/package.json
 
   ollama:
     build:
