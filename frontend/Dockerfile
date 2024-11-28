@@ -1,19 +1,18 @@
 FROM node:18
 
-# Installer les dépendances
+# Étape de build
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
-
-# Copier le code source
 COPY . .
-
-# Construire l'application Vue.js
 RUN npm run build
 
-# Utiliser un serveur statique
+# Étape de serveur
 FROM nginx:alpine
 COPY --from=0 /app/dist /usr/share/nginx/html
+
+# Ajouter la configuration personnalisée pour Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
