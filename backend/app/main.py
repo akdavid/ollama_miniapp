@@ -1,32 +1,18 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from app.api.routes import router
+from app.api.v1.routes import router as api_router
+from app.core.config import settings
 
-# Créer une instance FastAPI
-app = FastAPI()
+# Create a FastAPI instance
+app = FastAPI(title=settings.APP_NAME)
 
-# Ajouter un middleware pour gérer CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "*"
-    ],  # Permettre toutes les origines (changez en fonction de vos besoins)
+    allow_origins=["*"],  # Replace "*" with specific domains if needed
     allow_credentials=True,
-    allow_methods=["*"],  # Permettre toutes les méthodes HTTP
-    allow_headers=["*"],  # Permettre tous les headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-
-# Middleware pour capturer et logger les exceptions non gérées
-@app.middleware("http")
-async def log_exceptions(request: Request, call_next):
-    try:
-        return await call_next(request)
-    except Exception as e:
-        print(f"Unhandled exception: {e}")
-        return JSONResponse(status_code=500, content={"detail": str(e)})
-
-
-# Ajouter les routes
-app.include_router(router)
+# Include routes
+app.include_router(api_router, prefix=settings.API_V1_PREFIX)

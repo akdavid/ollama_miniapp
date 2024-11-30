@@ -1,5 +1,24 @@
-version: '3.8'
 services:
+  frontend:
+    build:
+      context: ./frontend
+      target: ${NODE_ENV:-development} # Utilise "development" par défaut
+    ports:
+      - '8080:5173' # Dev server
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+
+  nginx:
+    build:
+      context: ./frontend
+      target: production # Utilise l'étape production
+    ports:
+      - '80:80' # Port public
+    depends_on:
+      - frontend
+
   backend:
     build:
       context: ./backend
@@ -9,26 +28,8 @@ services:
       - ./backend/app:/app/app
     env_file:
       - .env
-    depends_on:
-      - ollama
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - '8080:80'
-    env_file:
-      - .env
-    develop:
-      watch:
-        - action: sync
-          path: ./frontend/src
-          target: /app/src
-        - action: sync
-          path: ./frontend/public
-          target: /app/public
-        - action: rebuild
-          path: ./frontend/package.json
+    environment:
+      - ENV=development
 
   ollama:
     build:
@@ -42,6 +43,9 @@ services:
     entrypoint: /entrypoint.sh
     env_file:
       - .env
+    environment:
+      - OLLAMA_DEBUG=true
+      - OLLAMA_MAX_LOADED_MODELS=1
 
 volumes:
   ollama:
