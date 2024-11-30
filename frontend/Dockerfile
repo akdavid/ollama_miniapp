@@ -1,19 +1,29 @@
-FROM node:18
+# Étape de développement
+FROM node:18 AS development
 
-# Étape de build
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm install
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]
+
+# Étape de build pour la production
+FROM node:18 AS build
+
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 
-# Étape de serveur
-FROM nginx:alpine
-COPY --from=0 /app/dist /usr/share/nginx/html
-
-# Ajouter la configuration personnalisée pour Nginx
+# Étape de production : Servir les fichiers avec Nginx
+FROM nginx:alpine AS production
+COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
 EXPOSE 80
 
+# Lancer Nginx en mode foreground
 CMD ["nginx", "-g", "daemon off;"]

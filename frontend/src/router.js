@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Chat from './components/Chat.vue';
-import ImageDescription from './components/ImageDescription.vue';
+import ChatPage from './pages/ChatPage.vue';
+import ImagePage from './pages/ImagePage.vue';
+import HomePage from './pages/HomePage.vue';
 
 const routes = [
-  { path: '/', component: Chat },
-  { path: '/image-description', component: ImageDescription },
+    { path: '/', name: 'Home', component: HomePage },
+    { path: '/chat', name: 'Chat', component: ChatPage },
+    { path: '/image-description', name: 'Image', component: ImagePage },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+    history: createWebHistory(),
+    routes,
 });
 
 export default router;

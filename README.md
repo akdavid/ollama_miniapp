@@ -1,100 +1,235 @@
 # Ollama MiniApp
 
-**Ollama MiniApp** est une application web permettant de dialoguer avec plusieurs modèles de langage, tels que Llama, Gemma, ou Mistral, via une interface utilisateur intuitive. Ce projet repose sur un backend FastAPI, un frontend Vue.js, et utilise Ollama pour exécuter les modèles de langage.
+<p align="center">
+  <img src="frontend/src//assets/logo.png" alt="Ollama MiniApp Logo" width="500">
+</p>
 
-![Capture d'écran](images/main_interface.png) <!-- Capture de l'interface principale -->
-
-## Fonctionnalités
-
-- **Interface utilisateur intuitive** : Une interface moderne pour envoyer des messages et afficher les réponses du modèle.
-- **Sélection de modèle** : Choisissez parmi une liste de modèles prédéfinis directement dans l'interface.
-- **Backend extensible** : Basé sur FastAPI, pour une gestion facile des requêtes.
-- **Déploiement Dockerisé** : Installation rapide avec Docker Compose.
-- **Personnalisation des modèles** : Configurez et gérez facilement les modèles via les variables d'environnement.
-
-## Architecture
-
-- **Frontend** : Développé avec Vue.js, offrant une interface interactive et réactive.
-- **Backend** : API REST construite avec FastAPI pour gérer la communication entre le frontend et Ollama.
-- **Modèles de langage** : Exécutés via l'API Ollama.
+**Ollama MiniApp** is a web application that enables interaction with various language models (LLMs) like Llama, Gemma, or Mistral and vision-language models (VLMs) for image description, all through an intuitive user interface. This project is built with a FastAPI backend, a Vue.js frontend, and utilizes Ollama to run these models efficiently.
 
 ---
 
-## Prérequis
+## Features
 
-- **Docker** : Installez Docker et Docker Compose avant de continuer.
+- **Intuitive User Interface**: A modern, responsive design for interacting with language models.
+- **Model Selection**: Choose from a list of predefined models directly in the interface.
+- **Image Description**: Generate descriptions for uploaded images.
+- **Extensible Backend**: Built on FastAPI to facilitate robust API management.
+- **Dockerized Deployment**: Quick setup and deployment using Docker Compose.
+- **Customizable Models**: Manage and configure models easily with environment variables.
 
 ---
 
-## Installation et déploiement
+## Screenshots
 
-1. **Clonez ce dépôt** :
+### Home Page
+
+![Screenshot](images/home.png) <!-- Home interface screenshot -->
+
+### Chat Page
+
+![Chat Page](images/chat.png)
+
+### Image Description Page
+
+![Image Description Page](images/image_description.png)
+
+---
+
+## Architecture Overview
+
+### Backend
+
+- **Framework**: FastAPI
+- **Key Components**:
+  - `app/core`: Core utilities for configuration and logging.
+  - `app/api/v1`: API routes for chat, image descriptions, and model management.
+  - `app/services`: Service layer for handling API interactions with Ollama.
+
+### Frontend
+
+- **Framework**: Vue.js
+- **Structure**:
+  - `src/pages`: Individual pages for chat, home, and image description functionalities.
+  - `src/components`: Reusable components for chat and image interactions.
+  - `src/api`: API utility functions for backend communication.
+
+### Models
+
+- Managed via Ollama, supporting the latest LLM and VLM models.
+
+---
+
+## Prerequisites
+
+- **Docker**: Install Docker and Docker Compose.
+- **Node.js**: Required for frontend development if you intend to run locally.
+
+---
+
+## Installation and Deployment
+
+### Development Setup
+
+Use the following steps for local development with hot-reloading:
+
+1. **Clone the Repository**:
 
    ```bash
    git clone https://github.com/akdavid/ollama_miniapp.git
    cd ollama_miniapp
    ```
 
-2. **Configurez votre environnement** :
+2. **Set Up the Environment**:
 
    ```bash
    cp .env.example .env
    ```
 
-3. **Lancez l'application** :
+3. **Start the Development Environment**:
 
    ```bash
-   docker-compose up --build
+   NODE_ENV=development docker-compose up --build
    ```
 
-4. **Accédez à l'interface web** : [http://localhost:8080](http://localhost:8080)
+4. **Access the Interface**:
+   - **Frontend**: [http://localhost:8080](http://localhost:8080)
+   - **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+In development mode:
+
+- Changes to the frontend code will trigger hot-reloading.
+- Backend code updates will restart the container automatically.
 
 ---
 
-## Utilisation
+### Production Setup
 
-1. **Sélectionnez un modèle** : Utilisez la liste déroulante en haut de la page pour choisir le modèle de langage avec lequel vous souhaitez interagir.
-2. **Envoyez un message** : Tapez un message dans la barre de saisie et cliquez sur "Envoyer".
-3. **Recevez une réponse** : Les messages de l'utilisateur s'affichent à droite, et les réponses du modèle apparaissent à gauche.
+Use these steps to build and deploy the application for production:
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/akdavid/ollama_miniapp.git
+   cd ollama_miniapp
+   ```
+
+2. **Set Up the Environment**:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Build and Start the Production Environment**:
+
+   ```bash
+   NODE_ENV=production docker-compose up --build
+   ```
+
+4. **Access the Interface**:
+   - **Frontend**: [http://localhost](http://localhost)
+   - **Backend API Docs**: [http://localhost:8000/docs](http://localhost:8000/docs)
+
+In production mode:
+
+- The frontend is built and served as static files through Nginx.
+- The backend runs with FastAPI, optimized for production.
 
 ---
 
-## Variables d'environnement
+## Usage
 
-Les variables suivantes peuvent être configurées dans le fichier `.env` :
+### Chat with a Language Model
 
-- **`LLM_MODELS`** : Une liste des modèles de langage disponibles, séparés par des virgules (exemple : `gemma:2b,llama3.2:3b,mistral:7b`).
-  - Ces modèles doivent être compatibles avec Ollama. Une liste des modèles supportés est disponible sur [la bibliothèque Ollama](https://ollama.com/library).
-- **`OLLAMA_API_URL`** : URL de l'API Ollama pour la génération de texte (par défaut : `http://ollama:11434/api/generate`).
+1. **Select a Model**: Use the dropdown menu on the chat page.
+2. **Send a Message**: Enter a message and click "Send."
+3. **Receive Responses**: View responses in a real-time conversation format.
 
----
+### Image Description
 
-## Ports utilisés
-
-- **Frontend** : `8080`
-- **Backend** : `8000`
-- **Ollama** : `11434`
+1. **Upload an Image**: Use the form to upload an image file.
+2. **Generate Description**: Click "Send" to receive a detailed description of the image.
 
 ---
 
-## Limitations connues
+## Troubleshooting
 
-- **Prérequis matériels** : L'application est optimisée pour les CPU modernes avec support AVX2. Aucun GPU n'est requis pour les modèles actuels.
-- **Modèles compatibles** : Actuellement, seuls les modèles disponibles via Ollama sont pris en charge.
+### Common Issues
+
+1. **Port Already in Use**:
+
+   - The port used for the Ollama container (`11434`) may already be in use by the Ollama application running natively on your system.
+   - To stop the native Ollama service, use the following command:
+     ```bash
+     systemctl stop ollama.service
+     ```
+
+2. **Insufficient RAM for Image Descriptions**:
+   - Generating image descriptions may fail if there is not enough available RAM.
+   - Solution:
+     - Free up RAM by closing unnecessary applications.
+     - Use a smaller model configured via the `VLM_MODEL` environment variable.
+
+### Removing Unused Models in Ollama
+
+To delete a model from the Ollama container, use these commands:
+
+```bash
+docker exec -it ollama_miniapp-ollama-1 bash
+ollama rm <model_name>
+```
+
+---
+
+## Tasks Progress
+
+- [x] Chat with a language model (LLM).
+- [x] Dropdown for model selection.
+- [x] Image description with a vision-language model (VLM).
+
+---
+
+## To Do List
+
+- [ ] [OPS] Add CI/CD for the build of the app, the tests, and code formatting.
+  - [ ] [FRONT] Add unit tests for the frontend.
+  - [ ] [FRONT] Add code formatting.
+- [ ] [FULL] Add button to add a new LLM model from the web interface.
+- [ ] [FULL] Improve error handling for image description failures due to insufficient RAM or model limitations.
+- [ ] [BACK] Add support for GPU inference in the Ollama container.
+- [ ] [FRONT] Enhance the interface with real-time feedback for responses.
+- [ ] [BACK] Add history of the chat in LLM prompt (persistence).
+- [ ] [FRONT] Add Light/Dark modes.
+- [ ] [FULL] Add a prompt for the image description.
+- [ ] [FRONT] Add drag and drop for the uploaded image.
+- [ ] [FRONT] Try Tailwind CSS.
+- [ ] [NA] Add a documentation using Sphinx or MkDocs.
+- [ ] [FRONT] Add markdown visualization of chat responses.
+
+Do not hesitate to contribute! :)
+
+---
+
+## Environment Variables
+
+Configure these variables in `.env`:
+
+- **`LLM_MODELS`**: A comma-separated list of available language models (e.g., `gemma:2b,llama3.2:3b,mistral:7b`).
+- **`OLLAMA_API_URL`**: The base URL for Ollama's API (default: `http://ollama:11434`).
+- **`VLM_MODEL`**: Vision-language model for image descriptions.
 
 ---
 
 ## Contribution
 
-Les contributions sont les bienvenues ! Si vous trouvez un bug ou souhaitez proposer une fonctionnalité, ouvrez une issue ou soumettez une pull request.
+Contributions are welcome! If you'd like to add features or fix issues:
 
-1. Clonez ce dépôt.
-2. Créez une nouvelle branche pour vos modifications.
-3. Testez votre code localement.
-4. Envoyez une pull request avec une description claire.
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes and test locally.
+4. Submit a pull request with a clear explanation of your changes.
 
 ---
 
-## Licence
+## License
 
-Ce projet est sous licence [MIT](./LICENSE).
+This project is licensed under the [MIT License](./LICENSE).
