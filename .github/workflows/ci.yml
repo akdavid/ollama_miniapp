@@ -80,7 +80,7 @@ jobs:
 
       - name: Build Ollama Docker Image
         run: |
-          docker build -f Dockerfile.dev --no-cache -t ollama_miniapp-ollama ./ollama
+          docker build -f ./ollama/Dockerfile.dev --no-cache -t ollama_miniapp-ollama ./ollama
 
   build-and-push-backend:
     name: Build and Push Backend Docker Image
@@ -134,5 +134,5 @@ jobs:
 
       - name: Build and Push Ollama Docker Image
         run: |
-          docker build --no-cache -f Dockerfile.prod -t ghcr.io/${{ github.repository }}/ollama_miniapp-ollama:latest ./ollama
+          docker build --no-cache -f ./ollama/Dockerfile.prod -t ghcr.io/${{ github.repository }}/ollama_miniapp-ollama:latest ./ollama
           docker push ghcr.io/${{ github.repository }}/ollama_miniapp-ollama:latest
