@@ -199,7 +199,7 @@ ollama rm <model_name>
 - [ ] [FRONT] Enhance the interface with real-time feedback for responses.
 - [ ] [BACK] Add history of the chat in LLM prompt (persistence).
 - [ ] [FRONT] Add Light/Dark modes.
-- [ ] [FULL] Add a prompt for the image description.
+- [x] [FULL] Add a prompt for the image description.
 - [ ] [FRONT] Add drag and drop for the uploaded image.
 - [ ] [FRONT] Try Tailwind CSS.
 - [ ] [NA] Add a documentation using Sphinx or MkDocs.

@@ -15,6 +15,24 @@
                     accept="image/*"
                 />
             </div>
+
+            <!-- Settings Button -->
+            <div class="settings-toggle">
+                <button type="button" class="btn-settings" @click="togglePromptInput">⚙️</button>
+            </div>
+
+            <!-- Conditional Prompt Input -->
+            <div v-if="showPromptInput" class="form-group">
+                <label for="custom-prompt" class="label">Custom Prompt:</label>
+                <input
+                    type="text"
+                    id="custom-prompt"
+                    v-model="customPrompt"
+                    placeholder="Write your custom prompt here"
+                    class="input-prompt"
+                />
+            </div>
+
             <button type="submit" class="btn-submit" :disabled="loading || !selectedImage">
                 {{ loading ? 'Analyzing...' : 'Submit' }}
             </button>
@@ -44,16 +62,17 @@ export default {
     data() {
         return {
             selectedImage: null,
-            previewImage: null, // URL for the preview
+            previewImage: null,
             description: null,
             loading: false,
+            customPrompt: "What's in this image?", // Default prompt
+            showPromptInput: false, // Toggle for showing/hiding prompt input
         };
     },
     methods: {
         handleFileChange(event) {
             this.selectedImage = event.target.files[0];
 
-            // Generate preview of the selected image
             if (this.selectedImage) {
                 const reader = new FileReader();
                 reader.onload = e => {
@@ -71,14 +90,19 @@ export default {
             this.description = null;
 
             try {
-                // Call the service function
-                this.description = await fetchImageDescription(this.selectedImage);
+                this.description = await fetchImageDescription(
+                    this.selectedImage,
+                    this.customPrompt,
+                );
             } catch (error) {
                 this.description = 'An error occurred while analyzing the image.';
                 console.error(error);
             } finally {
                 this.loading = false;
             }
+        },
+        togglePromptInput() {
+            this.showPromptInput = !this.showPromptInput;
         },
     },
 };
@@ -139,6 +163,20 @@ export default {
     box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
 }
 
+.input-prompt {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.input-prompt:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
 .btn-submit {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
@@ -158,6 +196,24 @@ export default {
 
 .btn-submit:not(:disabled):hover {
     background-color: #0056b3;
+}
+
+/* Settings Button */
+.btn-settings {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.3s ease;
+}
+
+.btn-settings:hover {
+    background-color: #e6e6e6;
 }
 
 /* Image Preview */
