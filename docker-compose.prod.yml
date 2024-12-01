@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: production # Étape de production
+    ports:
+      - '80:80' # Expose directement via NGINX
+    depends_on:
+      - backend # Assure que le backend est démarré avant
+
+  backend:
+    build:
+      context: ./backend
+    image: ollama_miniapp-backend
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    environment:
+      - ENV=production # Changez l'environnement
+
+  ollama:
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama.prod
+      args:
+        - LLM_MODELS=${LLM_MODELS}
+        - VLM_MODEL=${VLM_MODEL}
+    image: ollama_miniapp-ollama
+    ports:
+      - '11434:11434'
+    env_file:
+      - .env
+    environment:
+      - OLLAMA_DEBUG=false

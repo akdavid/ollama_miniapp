@@ -10,15 +10,6 @@ services:
     environment:
       - NODE_ENV=development
 
-  nginx:
-    build:
-      context: ./frontend
-      target: production # Utilise l'étape production
-    ports:
-      - '80:80' # Port public
-    depends_on:
-      - frontend
-
   backend:
     build:
       context: ./backend
@@ -34,12 +25,11 @@ services:
   ollama:
     build:
       context: .
-      dockerfile: Dockerfile.ollama
+      dockerfile: Dockerfile.ollama.dev
     ports:
       - '11434:11434'
     volumes:
       - ollama:/root/.ollama
-      - ./entrypoint.sh:/entrypoint.sh
     entrypoint: /entrypoint.sh
     env_file:
       - .env
