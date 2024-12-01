@@ -25,7 +25,7 @@ services:
   ollama:
     build:
       context: ./ollama
-      dockerfile: Dockerfile.ollama.dev
+      dockerfile: Dockerfile.dev
     ports:
       - '11434:11434'
     volumes:
