@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r backend/requirements.txt
 # Copy frontend dependencies and build the frontend
 COPY frontend/package*.json frontend/
 RUN cd frontend && npm install && npm run build
+COPY ./frontend ./frontend
 
 # Copy Ollama entrypoint and dependencies
 COPY ollama/entrypoint.sh ./entrypoint.sh
