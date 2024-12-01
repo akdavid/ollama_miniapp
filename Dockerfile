@@ -18,7 +18,7 @@ COPY backend/requirements.txt backend/
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
 # Copy frontend dependencies and build the frontend
-COPY frontend/package*.json frontend/
+COPY ./frontend ./frontend
 RUN cd frontend && npm install && npm run build
 COPY ./frontend ./frontend
 
