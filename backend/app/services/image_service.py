@@ -7,12 +7,13 @@ from app.core.config import settings
 from app.core.dependencies import get_openai_client
 
 
-async def process_image_description(image):
+async def process_image_description(image, prompt):
     """
     Process an image and generate a description using OpenAI's model.
 
     Args:
         image (UploadFile): The uploaded image file.
+        prompt (str): The custom prompt for image description.
 
     Returns:
         JSONResponse: A response containing the generated description.
@@ -24,7 +25,7 @@ async def process_image_description(image):
 
         # Open and verify the image
         img = Image.open(BytesIO(image_data))
-        img.verify()  # Verify image integrity
+        img.verify()
         print(f"Image verified: {img.format}, size: {img.size}")
 
         # Convert image to base64
@@ -35,14 +36,14 @@ async def process_image_description(image):
         # Initialize OpenAI client
         openai_client = get_openai_client()
 
-        # Create the prompt with the base64 image
+        # Use the provided custom prompt
         response = openai_client.chat.completions.create(
             model=settings.VLM_MODEL,
             messages=[
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "What's in this image?"},
+                        {"type": "text", "text": prompt},
                         {"type": "image_url", "image_url": img_url},
                     ],
                 }
