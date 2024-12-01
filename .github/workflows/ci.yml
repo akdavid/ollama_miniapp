@@ -36,8 +36,36 @@ jobs:
           source .venv/bin/activate
           PYTHONPATH=./backend pytest backend/tests
 
-  build-and-push-backend:
-    name: Build and Push Backend Docker Image
+  build-backend-develop:
+    name: Build Backend for Develop
+    runs-on: ubuntu-latest
+    needs: python-tests
+    if: github.ref == 'refs/heads/develop' # Condition pour `develop`
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Backend Docker Image for Develop
+        run: |
+          docker build --no-cache -t ollama_miniapp-backend-develop ./backend
+
+  build-frontend-develop:
+    name: Build Frontend for Develop
+    runs-on: ubuntu-latest
+    needs: python-tests
+    if: github.ref == 'refs/heads/develop' # Condition pour `develop`
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Frontend Docker Image for Develop
+        run: |
+          docker build --no-cache -t ollama_miniapp-frontend-develop ./frontend
+
+  build-and-push-backend-master:
+    name: Build and Push Backend for Master
     runs-on: ubuntu-latest
     needs: python-tests
     if: github.ref == 'refs/heads/master' # Condition pour `master`
@@ -54,8 +82,8 @@ jobs:
           docker build --no-cache -t ghcr.io/${{ github.repository }}/ollama_miniapp-backend:latest ./backend
           docker push ghcr.io/${{ github.repository }}/ollama_miniapp-backend:latest
 
-  build-and-push-frontend:
-    name: Build and Push Frontend Docker Image
+  build-and-push-frontend-master:
+    name: Build and Push Frontend for Master
     runs-on: ubuntu-latest
     needs: python-tests
     if: github.ref == 'refs/heads/master' # Condition pour `master`
@@ -71,21 +99,3 @@ jobs:
         run: |
           docker build --no-cache -t ghcr.io/${{ github.repository }}/ollama_miniapp-frontend:latest ./frontend
           docker push ghcr.io/${{ github.repository }}/ollama_miniapp-frontend:latest
-
-  build-and-push-ollama:
-    name: Build and Push Custom Ollama Docker Image
-    runs-on: ubuntu-latest
-    needs: python-tests
-    if: github.ref == 'refs/heads/master' # Condition pour `master`
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Log in to GitHub Docker Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Build and Push Frontend Docker Image
-        run: |
-          docker build --no-cache -t ghcr.io/${{ github.repository }}/ollama_miniapp-frontend:ollama ./ollama
-          docker push ghcr.io/${{ github.repository }}/ollama_miniapp-ollama:latest
