@@ -34,7 +34,7 @@ jobs:
       - name: Run tests
         run: |
           source .venv/bin/activate
-          pytest backend/tests
+          PYTHONPATH=./backend pytest backend/tests
 
   build-backend:
     name: Build Backend
