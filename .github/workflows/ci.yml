@@ -107,6 +107,7 @@ jobs:
     if: github.ref == 'refs/heads/master' # Exécuter uniquement sur master
     if: github.ref == 'refs/heads/master' # Exécuter uniquement sur master
 
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
