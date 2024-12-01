@@ -24,7 +24,7 @@ services:
   ollama:
     build:
       context: ./ollama
-      dockerfile: Dockerfile.ollama.prod
+      dockerfile: Dockerfile.prod
       args:
         - LLM_MODELS=${LLM_MODELS}
         - VLM_MODEL=${VLM_MODEL}
