@@ -105,6 +105,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: python-tests
     if: github.ref == 'refs/heads/master' # Exécuter uniquement sur master
+    if: github.ref == 'refs/heads/master' # Exécuter uniquement sur master
+
 
     steps:
       - name: Checkout code
