@@ -88,7 +88,7 @@ Use the following steps for local development with hot-reloading:
 3. **Start the Development Environment**:
 
    ```bash
-   NODE_ENV=development docker-compose up --build
+   docker compose up --build
    ```
 
 4. **Access the Interface**:
@@ -122,7 +122,7 @@ Use these steps to build and deploy the application for production:
 3. **Build and Start the Production Environment**:
 
    ```bash
-   NODE_ENV=production docker-compose up --build
+   docker compose -f docker-compose.prod.yml up
    ```
 
 4. **Access the Interface**:
@@ -190,7 +190,7 @@ ollama rm <model_name>
 
 ## To Do List
 
-- [ ] [OPS] Add CI/CD for the build of the app, the tests, and code formatting.
+- [ ] [OPS] Improve CI/CD for tests and code formatting.
   - [ ] [FRONT] Add unit tests for the frontend.
   - [ ] [FRONT] Add code formatting.
 - [ ] [FULL] Add button to add a new LLM model from the web interface.
