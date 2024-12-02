@@ -3,6 +3,13 @@
         <!-- Title -->
         <h1 class="title">Request an Image Description</h1>
 
+        <!-- VLM Model Display -->
+        <div v-if="vlmModel" class="vlm-model-info">
+            <p>
+                Using Vision-Language Model: <strong>{{ vlmModel }}</strong>
+            </p>
+        </div>
+
         <!-- Form -->
         <form @submit.prevent="processImage" class="form">
             <div class="form-group">
@@ -57,6 +64,7 @@
 
 <script>
 import { fetchImageDescription } from '@/api/image';
+import { fetchVLMModel } from '@/api/models';
 
 export default {
     data() {
@@ -66,8 +74,11 @@ export default {
             description: null,
             loading: false,
             customPrompt: "What's in this image?", // Default prompt
-            showPromptInput: false, // Toggle for showing/hiding prompt input
+            vlmModel: null, // Vision-Language Model name
         };
+    },
+    async mounted() {
+        await this.loadVLMModel(); // Fetch the VLM model on component load
     },
     methods: {
         handleFileChange(event) {
@@ -81,6 +92,14 @@ export default {
                 reader.readAsDataURL(this.selectedImage);
             } else {
                 this.previewImage = null;
+            }
+        },
+        async loadVLMModel() {
+            try {
+                this.vlmModel = await fetchVLMModel();
+            } catch (error) {
+                this.vlmModel = 'Error loading VLM model';
+                console.error('Error fetching VLM model:', error);
             }
         },
         async processImage() {
@@ -260,6 +279,14 @@ export default {
 .result-text {
     font-size: 1rem;
     line-height: 1.5;
+    color: #495057;
+}
+
+/* VLM Model Info */
+.vlm-model-info {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 1rem;
     color: #495057;
 }
 </style>

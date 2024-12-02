@@ -3,13 +3,15 @@ from app.core.config import settings
 
 router = APIRouter()
 
-# Retrieve available models
-LLM_MODELS = settings.LLM_MODELS.split(",")
-
 
 @router.get("/")
 async def get_models():
     """
-    Returns the list of available models.
+    Returns the list of available models, including LLM and VLM.
     """
-    return {"models": LLM_MODELS}
+    LLM_MODELS = settings.LLM_MODELS.split(",")
+    VLM_MODEL = settings.VLM_MODEL
+    return {
+        "llm_models": LLM_MODELS,
+        "vlm_model": VLM_MODEL,
+    }

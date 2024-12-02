@@ -7,7 +7,7 @@
         <div class="model-selector">
             <label for="model-select" class="model-label">Choose a model:</label>
             <select v-model="selectedModel" id="model-select" class="model-dropdown" required>
-                <option v-for="model in models" :key="model" :value="model">
+                <option v-for="model in llmModels" :key="model" :value="model">
                     {{ model }}
                 </option>
             </select>
@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { fetchModels, fetchChatResponse } from '@/api/chat';
+import { fetchChatResponse } from '@/api/chat';
+import { fetchLLMModels } from '@/api/models';
 
 export default {
     data() {
@@ -55,25 +56,30 @@ export default {
             userMessage: '',
             chatLog: [],
             loading: false,
-            models: [], // List of available models
+            llmModels: [], // List of available models
             selectedModel: '', // Model selected by the user
         };
     },
     async created() {
-        await this.loadModels(); // Fetch available models on component load
+        await this.loadLLMModels(); // Fetch available models on component load
     },
     methods: {
-        async loadModels() {
+        async loadLLMModels() {
             try {
-                this.models = await fetchModels();
-                if (this.models.length > 0) {
-                    this.selectedModel = this.models[0]; // Select the first model by default
+                this.llmModels = await fetchLLMModels(); // Fetch models from the backend
+                if (this.llmModels.length > 0) {
+                    this.selectedModel = this.llmModels[0]; // Automatically select the first model
                 }
             } catch (error) {
-                console.error('Error fetching models:', error);
+                console.error('Error fetching LLM models:', error);
             }
         },
         async sendMessage() {
+            if (!this.selectedModel) {
+                alert('Please select a model before sending a message.');
+                return;
+            }
+
             this.chatLog.push({ role: 'user', content: this.userMessage });
             const assistantEntry = { role: 'assistant', content: '' };
             this.chatLog.push(assistantEntry);
