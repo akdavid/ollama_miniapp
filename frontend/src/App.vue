@@ -4,10 +4,9 @@
         <header class="header">
             <nav class="nav">
                 <!-- Logo -->
-                <div class="logo-container">
+                <router-link to="/" class="logo-container">
                     <img src="@/assets/logo.webp" alt="Ollama MiniApp Logo" class="logo-image" />
-                    <h1 class="logo-text">Ollama MiniApp</h1>
-                </div>
+                </router-link>
 
                 <!-- Navigation Links -->
                 <div class="nav-links">
@@ -57,7 +56,9 @@ export default {
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 1rem; /* Increase gap between logo and text */
+    gap: 1rem;
+    text-decoration: none; /* Remove underline from router-link */
+    color: inherit; /* Inherit color for the text */
 }
 
 .logo-image {
